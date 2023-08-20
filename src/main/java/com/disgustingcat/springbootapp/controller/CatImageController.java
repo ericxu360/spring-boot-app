@@ -42,6 +42,9 @@ public class CatImageController {
         for (Cookie cookie : request.getCookies()) {
             if (cookie.getName().equals("AppsessionID")) {
                 Session session = sessionService.updateSession(Long.parseLong(cookie.getValue()));
+                if (session == null) {
+                    return new ResponseEntity<byte[]>(null, null, 403);
+                }
                 Optional<Cat> _cat = catRepository.findByIdAndUserId(catId, session.getUserId());
                 if (!_cat.isPresent()) {
                     return new ResponseEntity<byte[]>(null, null, 404);
@@ -71,6 +74,9 @@ public class CatImageController {
         for (Cookie cookie : request.getCookies()) {
             if (cookie.getName().equals("AppsessionID")) {
                 Session session = sessionService.updateSession(Long.parseLong(cookie.getValue()));
+                if (session == null) {
+                    return new ResponseEntity<>(null, null, 403);
+                }
                 Optional<Cat> _cat = catRepository.findByIdAndUserId(catId, session.getUserId());
                 if (!_cat.isPresent()) {
                     return new ResponseEntity<>(null, null, 404);

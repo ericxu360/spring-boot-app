@@ -39,7 +39,7 @@ public class SessionServiceImpl implements SessionService {
         Session s = new Session();
         s.setUserId(username);
         s = sessionRepository.save(s);
-        s.setExpiresOn(new Date(s.getLastUsed().getTime() + TimeUnit.MINUTES.toMillis(1)));
+        s.setExpiresOn(new Date(s.getLastUsed().getTime() + TimeUnit.MINUTES.toMillis(10)));
         return sessionRepository.save(s);
     }
 
