@@ -19,8 +19,8 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests((requests) -> 
             requests.requestMatchers("/api/**").authenticated().anyRequest().permitAll())
             .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
-        */
-        http.cors(Customizer.withDefaults());
+            */
+        http.cors((cors) -> cors.disable());
         http.csrf((csrf) -> csrf.disable());
 
       //  http.setSharedObject(ContentNegotiationStrategy.class, new HeaderContentNegotiationStrategy());

@@ -24,17 +24,17 @@ public class ImageServiceImpl implements ImageService {
     @Override
     @Transactional
     public String addImage(MultipartFile file) throws IOException {
-        Image userImage = new Image();
-        userImage.setImage(new Binary(BsonBinarySubType.BINARY, file.getBytes()));
-        return imageRepository.save(userImage).getId();
+        Image image = new Image();
+        image.setImage(new Binary(BsonBinarySubType.BINARY, file.getBytes()));
+        return imageRepository.save(image).getId();
     }
 
     @Override
     @Transactional
-    public Image getImage(String userId) {
-        Optional<Image> _userImage = imageRepository.findById(userId);
-        if (_userImage.isPresent()) {
-            return _userImage.get();
+    public Image getImage(String imageId) {
+        Optional<Image> _image = imageRepository.findById(imageId);
+        if (_image.isPresent()) {
+            return _image.get();
         } else {
             return null;
         }

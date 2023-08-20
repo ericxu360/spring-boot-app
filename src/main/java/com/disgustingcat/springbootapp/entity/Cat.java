@@ -5,7 +5,6 @@ import lombok.Setter;
 
 
 import jakarta.persistence.*;
-import java.util.Set;
 
 @Entity
 @Table(name="cat")
@@ -26,6 +25,6 @@ public class Cat {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cat")
-    private Set<Incident> incidents;
+    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "cat")
+    //private Set<Incident> incidents;
 }
