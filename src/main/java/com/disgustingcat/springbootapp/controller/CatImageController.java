@@ -62,7 +62,6 @@ public class CatImageController {
             }
         }
         return new ResponseEntity<byte[]>(null, null, 403);
-
     }
 
     @PostMapping("/api/cat-image")

@@ -1,11 +1,13 @@
 package com.disgustingcat.springbootapp.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +41,30 @@ public class CatController {
                 }
                 c.setUserId(session.getUserId());
                 return new ResponseEntity<Cat>(catRepository.save(c), null, 200);
+            }
+        }
+        return new ResponseEntity<Cat>(null, null, 403);
+    }
+
+    @PatchMapping("/api/cats/{id}")
+    private ResponseEntity<Cat> patchCat(@PathParam("id") Long catId, @RequestBody Cat patchCat, HttpServletRequest request) {
+        if (request.getCookies() == null) {
+            return new ResponseEntity<Cat>(null, null, 403);
+        }
+        for (Cookie cookie : request.getCookies()) {
+            if (cookie.getName().equals("AppsessionID")) {
+                Session session = sessionService.updateSession(Long.parseLong(cookie.getValue()));
+                if (session == null) {
+                    return new ResponseEntity<Cat>(null, null, 403);
+                }
+                Optional<Cat> _cat = catRepository.findByIdAndUserId(catId, session.getUserId());
+                if (!_cat.isPresent()) {
+                    return new ResponseEntity<Cat>(null, null, 404);
+                }
+                Cat cat = _cat.get();
+                cat.setUserId(session.getUserId());
+                cat.setName(patchCat.getName());
+                return new ResponseEntity<Cat>(catRepository.save(cat), null, 200);
             }
         }
         return new ResponseEntity<Cat>(null, null, 403);
