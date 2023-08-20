@@ -1,0 +1,76 @@
+services:
+  backend:
+    image: springbootapp
+    build: spring-boot-app
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - angular-spring
+      - spring-postgres
+      - spring-mongo
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    expose:
+      - 8080
+  postgres:
+    image: postgres:latest
+    restart: always
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "springbootapp", "-h", "127.0.0.1", "-U", "username", "-q"]
+      interval: 3s
+      retries: 5
+      start_period: 30s
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: username
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: springbootapp
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./dbs/docker-entrypoint-initdb.d/postgresinit.sql:/docker-entrypoint-initdb.d/postgresinit.sql
+    networks:
+      - spring-postgres
+    expose:
+      - 5432
+  mongo:
+    image: mongo:latest
+    restart: always
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.runCommand({ping: 1}).ok", "--quiet"]
+      interval: 3s
+      retries: 5
+      start_period: 30s
+    environment:
+      MONGO_INITDB_DATABASE: springbootapp
+    volumes:
+      - db-data:/data/db
+      - ./dbs/docker-entrypoint-initdb.d/mongoinit.sh:/docker-entrypoint-initdb.d/mongoinit.sh
+      - ./dbs/docker-entrypoint-initdb.d/dump:/docker-entrypoint-initdb.d/dump
+    networks:
+      - spring-mongo
+    expose:
+      - 27017
+  frontend:
+    image: frontend
+    build:
+      context: frontend/app
+      target: builder 
+    ports:
+      - 4200:4200
+    volumes:
+      - ./frontend/app:/project
+      - /project/node_modules
+    networks:
+      - angular-spring
+    depends_on:
+      - backend
+volumes:
+  db-data: {}
+networks:
+  angular-spring: {}
+  spring-postgres: {}
+  spring-mongo: {}
