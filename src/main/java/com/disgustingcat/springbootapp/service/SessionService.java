@@ -8,4 +8,5 @@ import com.disgustingcat.springbootapp.entity.Session;
 public interface SessionService {
     public Session updateSession(Long id);
     public Session createSession(String username);
+    public boolean expireSession(Long id);
 }

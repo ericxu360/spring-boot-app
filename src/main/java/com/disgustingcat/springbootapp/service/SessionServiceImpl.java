@@ -43,4 +43,22 @@ public class SessionServiceImpl implements SessionService {
         return sessionRepository.save(s);
     }
 
+    @Override
+    @Transactional
+    public boolean expireSession(Long id) {
+        Optional<Session> s = sessionRepository.findById(id);
+        if (!s.isPresent()) {
+            return false;
+        }
+        Session session = s.get();
+        if (session.getExpiresOn().before(new Date(System.currentTimeMillis()))) {
+            return false;
+        }
+        session.setLastUsed(Date.from(java.time.Clock.systemDefaultZone().instant()));
+        session.setExpiresOn(new Date(session.getLastUsed().getTime()));
+        sessionRepository.save(session);
+        return true;
+    }
+
+
 }
