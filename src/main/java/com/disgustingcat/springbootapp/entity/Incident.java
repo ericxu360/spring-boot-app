@@ -18,6 +18,9 @@ public class Incident {
     @JoinColumn(name = "cat_id", nullable = false)
     private Cat cat;
 
+    @Column(name = "cat_name")
+    private String catName;
+
     @Column(name = "user_id", nullable = false)
     private String catUser;
 
