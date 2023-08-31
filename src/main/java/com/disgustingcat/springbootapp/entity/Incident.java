@@ -14,13 +14,19 @@ public class Incident {
     @Column(name = "id")
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "cat_id", nullable = false)
-    private Cat cat;
+    @Column(name = "cat_id", nullable = false)
+    private long catId;
+
+    @Column(name = "cat_name")
+    private String catName;
 
     @Column(name = "user_id", nullable = false)
     private String catUser;
 
     @Column(name = "date_created")
     private Date date;
+
+    @Column(name = "audio_url")
+    private String audioUrl;
+
 }

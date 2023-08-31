@@ -29,7 +29,7 @@ public class SessionServiceImpl implements SessionService {
             return null;
         }
         session.setLastUsed(Date.from(java.time.Clock.systemDefaultZone().instant()));
-        session.setExpiresOn(new Date(session.getLastUsed().getTime() + TimeUnit.MINUTES.toMillis(1)));
+        session.setExpiresOn(new Date(session.getLastUsed().getTime() + TimeUnit.MINUTES.toMillis(10)));
         return sessionRepository.save(session);
     }
 
